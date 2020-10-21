@@ -1,0 +1,161 @@
+#require "csv" #csv is used to read the tsv file.
+
+#parsed_file = CSV.read("./seed_stock_data.tsv", { :col_sep => "\t" }) #read the file and generate an array whose elements are the lines (also arrays)
+
+
+#puts parsed_file[1]
+
+class Seed_stock_data   
+
+  attr_accessor :seed_stock  
+  attr_accessor :mutant_gene_id
+  attr_accessor :last_planted  
+  attr_accessor :storage
+  attr_accessor :grams_remaining
+
+  
+  #Task 4: People have birthdays!
+
+  #Create a new method "birthday" that increments a person's age by 1 year prove that it works by incrementing the age of one of your patients and
+  #printing it in a sentence like "my age is now 44 years old". Where should the birthday method be?
+  
+
+  def initialize (params = {}) # get a name from the "new" call, or set a default
+    @seed_stock = params.fetch(:seed_stock, 'Default')
+    @mutant_gene_id = params.fetch(:mutant_gene_id, 'Default')
+    @last_planted = params.fetch(:last_planted, '0/0/0000')
+    @storage = params.fetch(:storage, 'Default')
+    @grams_remaining = params.fetch(:grams_remaining, '0')
+  end
+  
+  
+
+end
+
+
+#def read_tsv(path, class_to_fill, properties) #properties should be an array
+#  
+#  require "csv" #csv is used to read the tsv file.
+
+#  parsed_file = CSV.read(path, { :col_sep => "\t" }) #read the file and generate an array whose elements are the lines (also arrays)
+
+#  puts parsed_file[1]
+  
+  
+#  i = 0  
+#  for line in parsed_file
+#    unless i == 0 #do not read the header
+#      joined = line.zip properties #join line and properties array to be able to iterate through both of them at the same time
+#      for element, property in joined
+#        name = "seed_stock_#{i}"     
+#        name = class_to_fill.new()
+        
+#        puts name
+#        
+#        puts property
+#        
+#        puts element
+#        
+#        name.property = element
+#        #name.seed_stock = element 
+#      end 
+#    end
+#    i += 1    
+#  end
+  
+#end
+
+
+#def read_tsv(path, class_to_fill, properties) #properties should be an array
+  
+#  require "csv" #csv is used to read the tsv file.
+
+#  parsed_file = CSV.read(path, { :col_sep => "\t" }) #read the file and generate an array whose elements are the lines (also arrays)
+  
+  
+#  i = 0 
+#  for line in parsed_file
+#    unless i == 0 #do not include the header
+#      instances = Array.new()
+#      joined = line.zip properties #join line and properties array to be able to iterate through both of them at the same time
+#      instances[i-1] = class_to_fill.new()
+      
+      
+#        for element, property in joined
+         # puts property
+          #puts i
+#          instances[i-1].instance_variable_set(property, element)
+          #puts instances[i-1].inspect
+#        end
+#        puts instances[0].inspect
+        
+#    end
+
+#    i += 1    
+#  end
+#  return instances
+#end
+
+
+
+def read_tsv(path, class_to_fill, properties) #properties should be an array
+  
+  require "csv" #csv is used to read the tsv file.
+
+  parsed_file = CSV.read(path, { :col_sep => "\t" }) #read the file and generate an array whose elements are the lines (also arrays)
+  
+  parsed_file.shift #remove first element (the headers)
+  
+  i = 0
+  instances = Array.new()
+  for line in parsed_file
+      joined = line.zip properties #join line and properties array to be able to iterate through both of them at the same time
+      instances[i] = class_to_fill.new()
+      
+      
+        for element, property in joined
+         # puts property
+          #puts i
+          instances[i].instance_variable_set(property, element)
+          #puts instances[i-1].inspect
+        end
+
+    i += 1    
+  end
+  return instances
+end
+
+
+
+
+
+
+
+#properties_array = ["seed_stock", "mutant_gene_id", "last_planted", "storage", "grams_remaining"]
+
+properties_array = [:@seed_stock, :@mutant_gene_id, :@last_planted, :@storage, :@grams_remaining]
+  
+seed_stock_instances = read_tsv("./seed_stock_data.tsv", Seed_stock_data, properties_array)
+
+
+
+puts seed_stock_instances.inspect
+
+
+
+
+#test = Seed_stock_data.new(
+#  :seed_stock => "dfgh",      # inherited from Human
+#  :mutant_gene_id => "at45376ihj",                   # inherited from Human
+#  :last_planted => "1/11/1111",
+#  :storage => "cama",
+#  :grams_remaining => "3",
+#  )
+
+#puts test.seed_stock
+
+
+#File.open("log.txt", "w") 
+#{ |f| f.write "#{Time.now} - User logged in\n" } #write all the lines needed
+#File.close
+
