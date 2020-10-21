@@ -3,7 +3,7 @@ class Gene_information
   attr_accessor :gene_id  
   attr_accessor :gene_name
   attr_accessor :mutant_phenotype
-
+  attr_accessor :linked_to
 
 
 
@@ -11,8 +11,7 @@ class Gene_information
     @gene_id = params.fetch(:gene_id, 'Default')
     @gene_name = params.fetch(:gene_name, 'Default')
     @mutant_phenotype = params.fetch(:mutant_phenotype, 'Default')
-    @linked_to = params.fetch(:linked_to, '')
-
+    @linked_to = params.fetch(:linked_to, nil)
   end
   
   

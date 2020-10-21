@@ -55,19 +55,18 @@ gene_information_instances = read_tsv("./gene_information.tsv", Gene_information
 
 
 #The Merged_gene_seed_stock class only has the seed stock data. We have to add the gene_information
+#We also have to reject incorrect gene_id formats
 
-merged_gene_seed_stock_instances[0].add_gene_information(gene_information_instances)  
-
-
-
-#reject incorrect gene_id formats
-
-for instance in merged_gene_seed_stock_instances  
-    match_gene_id = Regexp.new(/A[Tt]\d[Gg]\d\d\d\d\d/) #define regular expression that defines gene_id_format
-    unless  match_gene_id.match(instance.mutant_gene_id) #it the format is not what it should be
-        instance.mutant_gene_id = 'check_format' #change mutant_gene_id to "check_format"
-        puts 'WARNING: wrong gene ID format. ID format set to "check_format"' #print a warning
-    end    
+for instance in merged_gene_seed_stock_instances #iterate over all seed stocks
+  
+  instance.add_gene_information(gene_information_instances) #add gene information
+  
+  #reject incorrect gene_id_formats
+  match_gene_id = Regexp.new(/A[Tt]\d[Gg]\d\d\d\d\d/) #define regular expression that defines gene_id_format
+  unless  match_gene_id.match(instance.mutant_gene_id) #it the format is not what it should be
+    instance.gene_information.gene_id = 'check_format' #change mutant_gene_id to "check_format"
+    puts 'WARNING: wrong gene ID format. ID format set to "check_format"' #print a warning
+  end    
 end
 
 
@@ -138,19 +137,20 @@ for instance in cross_data_instances #iterate over the Cross_data class
   if p_value < 0.05 #if p-value < 0.05 the genes are linked
     for object in merged_gene_seed_stock_instances #change seed_stock names for their corresponding mutant_gene_id
       if instance.parent1 == object.seed_stock
-        parent1_gene = object.mutant_gene_id #mutant gene name for parent 1
+        parent1_gene = object.gene_information.gene_id #mutant gene id for parent 1
       elsif instance.parent2 == object.seed_stock
-        parent2_gene = object.mutant_gene_id #mutant gene name for parent 2
+        parent2_gene = object.gene_information.gene_id #mutant gene id for parent 2
       end 
     end
+    
     
     #as the mutant genes in parent 1 and parent 2 are linked, we can fill the "linked_to" property in Merged_gene_seed_stock class
     
     for object in merged_gene_seed_stock_instances #for every object in the class
       if instance.parent1 == object.seed_stock #if it contains the seed_stock used as parent 1
-        object.linked_to = parent2_gene #state that its mutant_gene is linked to the mutant_gene in parent 2
+        object.gene_information.linked_to = parent2_gene #state that its mutant gene is linked to the mutant gene in parent 2
       elsif instance.parent2 == object.seed_stock #vice versa
-        object.linked_to = parent1_gene
+        object.gene_information.linked_to = parent1_gene
       end
       
     end
@@ -166,8 +166,8 @@ puts ""
 puts "Final report"
 
 for instance in merged_gene_seed_stock_instances
-    unless instance.linked_to == nil
-        puts "#{instance.mutant_gene_id} is linked to #{instance.linked_to}"
+    unless instance.gene_information.linked_to == nil
+        puts "#{instance.gene_information.gene_id} is linked to #{instance.gene_information.linked_to}"
     end
     
 end
